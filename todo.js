@@ -16,9 +16,10 @@ function writeFile(fname,tasks)
     return fs.writeFileSync(fname,"[ " + tasks+" ]");
 }
 
-function stringifyTasks()
+function stringifyTasks(arr1,arr2)
 {
-    mapped_list = todo_list.map(val => JSON.stringify(val));
+    arr1 = arr2.map(val => JSON.stringify(val));
+    return arr1;
 }
 
 function add (fname,new_task)
@@ -39,7 +40,12 @@ function filterWithStatus(status)
 
 function remove(id)
 {
-
+    mapped_list = todo_list.filter(element=>{
+        return element.id != id;
+        
+    });
+    mapped_list = stringifyTasks(mapped_list,mapped_list)
+    return mapped_list;
 }
 
 function update(id,key,val)
@@ -61,7 +67,7 @@ function run(fname)
         todo_list = JSON.parse(readFile(fname));
     }
 
-    stringifyTasks();
+    mapped_list= stringifyTasks(mapped_list,todo_list);
 
         switch(args[2])
         {
@@ -78,6 +84,7 @@ function run(fname)
                 console.log(filterWithStatus(false));
                 break;
             case 'remove':
+                writeFile(fname,remove(args[3]));
 
 
         }
