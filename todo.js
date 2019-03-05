@@ -3,7 +3,7 @@ const fs = require('fs');
 let args = process.argv
 let dict ={};
 let todo_list =[];
-let task_id = 1;
+let task_id =1;
 let mapped_list;
 
 function readFile(fname)
@@ -24,8 +24,8 @@ function stringifyTasks(arr1,arr2)
 
 function add (fname,new_task)
 {
-    task_id++;
-    dict = { "id":task_id,"name":new_task,"checked":false }
+    task_id=todo_list[todo_list.length-1].id+1;
+    dict = { "id":task_id,"name":new_task,"checked":"false" }
     mapped_list.push(JSON.stringify(dict));
     writeFile(fname,mapped_list);
 }
@@ -50,7 +50,15 @@ function remove(id)
 
 function update(id,key,val)
 {
-
+    mapped_list = todo_list.map(element=>{
+        if(element.id == id && key=== "checked")
+        {
+            element.checked = val
+        }
+        return element;
+    })
+    mapped_list = stringifyTasks(mapped_list,mapped_list)
+    return mapped_list;
 }
 
 function show()
@@ -78,13 +86,16 @@ function run(fname)
                 show();
                 break;
             case 'checked':
-                console.log(filterWithStatus(true));
+                console.log(filterWithStatus("true"));
                 break;
             case 'unchecked':
-                console.log(filterWithStatus(false));
+                console.log(filterWithStatus("false"));
                 break;
             case 'remove':
                 writeFile(fname,remove(args[3]));
+                break;
+            case 'update':
+                writeFile(fname,update(args[3],args[4],args[5]));
 
 
         }
